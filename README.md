@@ -11,3 +11,20 @@ and the reference directory the corresponding outputs.
 Type: make
 to compile everything and: make clean
 to remove all compiled objects
+Project tree
+-----------
+bin – Output executables (`targets`). The suffix `_d` indicates debug version.
+
+obj – Binary objects created during compilation.
+
+src – Source files of the project with subdirectories if needed.
+
+include – Files used by the main executable.
+
+test – Source files of tests.
+
+doc – Project’s documentation, possibly auto-generated.
+
+.gitignore – Prevents adding binary and temporary files to the git repository.
+
+README.md – General information about the project in Markdown format.
