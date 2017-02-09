@@ -127,12 +127,13 @@ int main(int argc, char **argv)
     fscanf(cF,"%lf",&cekin);
     fclose(cF);
     
-    double eps = 1.0e-1;
+    double eps = 1.0e-15;
     if (deq(cfx,*sys.fx,eps) && deq(cfy,*sys.fy,eps) &&
         deq(cfz,*sys.fz,eps) && deq(cekin,sys.ekin,eps)) {
         printf("PASSED\n");
     } else {
         printf("FAILED\n");
+        return 1;
     }
     printf("\n");
 #endif
@@ -143,6 +144,11 @@ int main(int argc, char **argv)
     printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
     printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
     output(&sys, erg, traj);
+
+#ifndef __TESTS__
+    
+
+#endif
 
     /**************************************************/
     /* main MD loop */
