@@ -96,6 +96,16 @@ int main(int argc, char **argv)
         return 3;
     }
 
+#ifdef DEBUG
+    printf("Restart with %d particles from %s\n", sys.natoms, restfile);
+    for (i=0; i<sys.natoms; ++i) {
+        printf("    Particle %d\n",i);
+        printf("      pos = %lf  %lf  %lf  \n",*(sys.rx+i), *(sys.ry+i), *(sys.rz+i) );
+        printf("      vel = %lf  %lf  %lf  \n",*(sys.vx+i), *(sys.vy+i), *(sys.vz+i) );
+    }
+    printf("\n");
+#endif
+
     /* initialize forces and energies.*/
     sys.nfi=0;
     force(&sys);
