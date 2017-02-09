@@ -1,5 +1,6 @@
-[Bb]in/
-[Oo]bj/
+[Bb]in/*
+[Oo]bj/*
+analysis/*
 *.o
 *.out
 *.x
