@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../include/global.h"
+#include "global.h"
 
 void azzero(double *d, const int n);
 double pbc(double x, const double boxby2);

@@ -11,10 +11,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "../include/global.h"
-#include "../include/io.h"
-#include "../include/misc.h"
-#include "../include/force_energy.h"
+#include "global.h"
+#include "io.h"
+#include "misc.h"
+#include "force_energy.h"
 
 /* generic file- or pathname buffer length */
 /* #define BLEN 200 */
