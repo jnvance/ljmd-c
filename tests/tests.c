@@ -65,6 +65,18 @@ int main(int argc, char **argv)
     printf("    dt         (fs)       =  %f \n", sys.dt);
     printf("    print freq            =  %d \n", nprint);
     printf("\n");
+    
+    /* loading correctfile for this test */
+    char correctfile[BLEN];
+    if(get_a_line(stdin,correctfile)) return 1;
+    FILE *cF;
+    cF=fopen(correctfile,"r");
+    double cfx,cfy,cfz,cekin0,ctemp,cekin1,cepot,cetot;
+    fscanf(cF,"%lf %lf %lf \n",&cfx,&cfy,&cfz);
+    fscanf(cF,"%lf \n",&cekin0);
+    fscanf(cF,"%lf %lf %lf %lf \n",&ctemp,&cekin1,&cepot,&cetot);
+    fclose(cF);
+
 #endif
 
     /* allocate memory */
@@ -116,24 +128,13 @@ int main(int argc, char **argv)
     printf("    force = %lf  %lf  %lf  \n",*(sys.fx), *(sys.fy), *(sys.fz));
     printf("    Ekin  = %lf  \n",(sys.ekin));
     
-    char correctfile[BLEN];
-    if(get_a_line(stdin,correctfile)) return 1;
-    
-    FILE *cF;
-    cF=fopen(correctfile,"r");
-    
-    double cfx, cfy, cfz, cekin;
-    fscanf(cF,"%lf %lf %lf ",&cfx,&cfy,&cfz);
-    fscanf(cF,"%lf",&cekin);
-    fclose(cF);
-    
-    double eps = 1.0e-15;
+    double eps = 1.0e-16;
     if (deq(cfx,*sys.fx,eps) && deq(cfy,*sys.fy,eps) &&
-        deq(cfz,*sys.fz,eps) && deq(cekin,sys.ekin,eps)) {
+        deq(cfz,*sys.fz,eps) && deq(cekin0,sys.ekin,eps))
+    {
         printf("PASSED\n");
     } else {
         printf("FAILED\n");
-        return 1;
     }
     printf("\n");
 #endif
@@ -141,14 +142,30 @@ int main(int argc, char **argv)
     erg=fopen(ergfile,"w");
     traj=fopen(trajfile,"w");
 
+#ifdef __TESTS__
+    /* Emulate one MD step */
+    printf("TEST one MD step\n");
+    printf("Starting simulation with %d atoms for %d step/s.\n",sys.natoms, sys.nsteps);
+    printf("     NFI                TEMP                EKIN                 EPOT              ETOT\n");
+    output(&sys, erg, traj);
+    velverlet(&sys);
+    ekin(&sys);
+    ++sys.nfi;
+    output(&sys, erg, traj);
+
+    if (deq(ctemp,sys.temp,eps) && deq(cekin1,sys.ekin,eps) &&
+        deq(cepot,sys.epot,eps) && deq(cetot,sys.ekin+sys.epot,eps))
+    {
+        printf("PASSED\n");
+    } else {
+        printf("FAILED\n");
+    }
+#endif
+
+#ifndef __TESTS__
     printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
     printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
     output(&sys, erg, traj);
-
-#ifndef __TESTS__
-    
-
-#endif
 
     /**************************************************/
     /* main MD loop */
@@ -161,11 +178,13 @@ int main(int argc, char **argv)
         /* propagate system and recompute energies */
         velverlet(&sys);
         ekin(&sys);
+        
     }
     /**************************************************/
 
     /* clean up: close files, free memory */
     printf("Simulation Done.\n\n");
+#endif
     fclose(erg);
     fclose(traj);
 

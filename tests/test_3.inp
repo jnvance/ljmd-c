@@ -2,12 +2,12 @@
 1                  # mass in AMU
 1                  # epsilon in kcal/mol
 1                  # sigma in angstrom
-10                 # rcut in angstrom
+5                  # rcut in angstrom
 20                 # box length (in angstrom)
 test_3.rest        # restart
 test_3.xyz         # trajectory
 test_3.dat         # energies
-3                  # nr MD steps
+1                  # nr MD steps
 1.0                # MD time step (in fs)
 1                  # output print frequency
 test_3_correct.txt # correctfile
