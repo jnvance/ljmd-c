@@ -4,7 +4,7 @@ OBJDIR    = obj
 BINDIR    = bin
 INCDIR    = include
 SERIALDIR = serial
-
+TESTDIR   = tests
 
 CC        = gcc
 LINKER    = gcc -o
@@ -18,7 +18,8 @@ LFLAGS    = -lm
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCDIR)/*.h)
 OBJ      := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-
+MAINOBJ  := $(OBJDIR)/main.o
+OBJXMAIN := $(filter-out $(MAINOBJ),$(OBJ))
 
 # rules for makeing parallel version of ljmd.
 $(BINDIR)/$(TARGET): $(OBJ)
@@ -49,16 +50,28 @@ $(SERIALDIR)/ljmd_serial.o: $(SERIALDIR)/ljmd.c
 	@echo "Compiled "$<" successfully!"
 
 
+tests: $(TESTDIR)/ljmd-tests.x
+
+$(TESTDIR)/ljmd-tests.x: $(OBJXMAIN) $(TESTDIR)/ljmd-tests.o
+	@mkdir -p $(dir $@)
+	@$(LINKER) $@ $(LFLAGS) $(OBJXMAIN) $(TESTDIR)/ljmd-tests.o  -Wl,-rpath,$(OBJDIR)/.
+	@echo "Linking complete!"
+
+$(TESTDIR)/ljmd-tests.o: $(TESTDIR)/tests.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled "$<" successfully!"
+
 # rules for cleaning up
 .PHONY: clean
 clean:
-	@rm -f $(OBJ) $(SERIALDIR)/*.o
+	@rm -f $(OBJ) $(SERIALDIR)/*.o $(TESTDIR)/*.o
 	@rm -rf $(OBJDIR)
 	@echo "Cleanup complete!"
 
 
 .PHONY: remove
 remove: clean
-	@rm -f $(BINDIR)/$(TARGET)
+	@rm -f $(BINDIR)/$(TARGET) $(TESTDIR)/*.x
 	@rm -rf $(BINDIR)
 	@echo "Executable removed!"
