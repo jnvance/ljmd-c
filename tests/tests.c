@@ -112,9 +112,32 @@ int main(int argc, char **argv)
     ekin(&sys);
 
 #ifdef DEBUG
-    printf("Initial variables\n");
+    printf("TEST initial variables\n");
     printf("    force = %lf  %lf  %lf  \n",*(sys.fx), *(sys.fy), *(sys.fz));
     printf("    Ekin  = %lf  \n",(sys.ekin));
+    
+    char correctfile[BLEN];
+    if(get_a_line(stdin,correctfile)) return 1;
+    
+    FILE *cF;
+    cF=fopen(correctfile,"r");
+    
+    double cfx, cfy, cfz, cekin;
+    fscanf(cF,"%lf %lf %lf ",&cfx,&cfy,&cfz);
+    fscanf(cF,"%lf",&cekin);
+    fclose(cF);
+    
+    double eps = 1.0e-1;
+    if (deq(cfx,*sys.fx,eps) && deq(cfy,*sys.fy,eps) &&
+        deq(cfz,*sys.fz,eps) && deq(cekin,sys.ekin,eps)) {
+    // if ( deq(cfy,*sys.fy,eps)) {
+        printf("PASSED\n");
+    } else {
+        printf("FAILED\n");
+    }
+    
+    // printf("%.20lf\n%.20lf",cfy,*sys.fy);
+    
     printf("\n");
 #endif
 
