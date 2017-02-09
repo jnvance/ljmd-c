@@ -21,7 +21,7 @@ double pbc(double x, const double boxby2)
 int deq(double a, double b, double eps)
 {
     double diff = a - b;
-    if ((diff > 0.0 && diff < eps) || (diff < 0.0 && -1.0*diff < eps) )
+    if ((diff > 0.0 && diff < eps) || (diff < 0.0 && -1.0*diff < eps) || diff == 0 )
     {
         return 1;
     } else {
