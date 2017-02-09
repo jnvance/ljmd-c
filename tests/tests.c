@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     if(get_a_line(stdin,line)) return 1;
     nprint=atoi(line);
 
-#ifdef DEBUG
+#ifdef __TESTS__
     printf("Parameters from input file:\n");
     printf("    natoms                =  %d \n", sys.natoms);
     printf("    mass       (AMU)      =  %f \n", sys.mass);
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
         return 3;
     }
 
-#ifdef DEBUG
+#ifdef __TESTS__
     printf("Restart with %d particles from %s\n", sys.natoms, restfile);
     for (i=0; i<sys.natoms; ++i) {
         printf("    Particle %d\n",i);
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
     force(&sys);
     ekin(&sys);
 
-#ifdef DEBUG
+#ifdef __TESTS__
     printf("TEST initial variables\n");
     printf("    force = %lf  %lf  %lf  \n",*(sys.fx), *(sys.fy), *(sys.fz));
     printf("    Ekin  = %lf  \n",(sys.ekin));
@@ -130,14 +130,10 @@ int main(int argc, char **argv)
     double eps = 1.0e-1;
     if (deq(cfx,*sys.fx,eps) && deq(cfy,*sys.fy,eps) &&
         deq(cfz,*sys.fz,eps) && deq(cekin,sys.ekin,eps)) {
-    // if ( deq(cfy,*sys.fy,eps)) {
         printf("PASSED\n");
     } else {
         printf("FAILED\n");
     }
-    
-    // printf("%.20lf\n%.20lf",cfy,*sys.fy);
-    
     printf("\n");
 #endif
 

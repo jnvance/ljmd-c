@@ -59,7 +59,7 @@ $(TESTDIR)/ljmd-tests.x: $(OBJXMAIN) $(TESTDIR)/ljmd-tests.o
 
 $(TESTDIR)/ljmd-tests.o: $(TESTDIR)/tests.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@ -D DEBUG
+	@$(CC) $(CFLAGS) -c $< -o $@ -D __TESTS__
 	@echo "Compiled "$<" successfully!"
 
 # rules for cleaning up
