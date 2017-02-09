@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "../include/global.h"
+#include "global.h"
 
 void ekin(mdsys_t *sys);
 void force(mdsys_t *sys);

@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../include/global.h"
+#include "global.h"
 
 int get_a_line(FILE *fp, char *buf);
 void output(mdsys_t *sys, FILE *erg, FILE *traj);
