@@ -18,6 +18,7 @@ LFLAGS    = -lm
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCDIR)/*.h)
 OBJ      := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+LIB      := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.so)
 MAINOBJ  := $(OBJDIR)/main.o
 OBJXMAIN := $(filter-out $(MAINOBJ),$(OBJ))
 
@@ -32,7 +33,6 @@ $(OBJ): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-
 
 # rules for makeing serial version of ljmd.
 serial: $(BINDIR)/ljmd-serial.x
@@ -61,6 +61,13 @@ $(TESTDIR)/ljmd-tests.o: $(TESTDIR)/tests.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@ -D __TESTS__
 	@echo "Compiled "$<" successfully!"
+
+shared: $(OBJDIR)/ljmd.so
+
+$(OBJDIR)/ljmd.so:  
+	@mkdir -p $(dir $@)
+	@gcc -shared -o $@ $(OBJXMAIN)
+	@echo "Compiled shared objects!"
 
 # rules for cleaning up
 .PHONY: clean
