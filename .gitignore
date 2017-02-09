@@ -1,0 +1,10 @@
+[Bb]in/
+[Oo]bj/
+*.o
+*.out
+*.x
+*.so
+*.dat
+*.xyz
+
+
