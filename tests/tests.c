@@ -111,6 +111,13 @@ int main(int argc, char **argv)
     force(&sys);
     ekin(&sys);
 
+#ifdef DEBUG
+    printf("Initial variables\n");
+    printf("    force = %lf  %lf  %lf  \n",*(sys.fx), *(sys.fy), *(sys.fz));
+    printf("    Ekin  = %lf  \n",(sys.ekin));
+    printf("\n");
+#endif
+
     erg=fopen(ergfile,"w");
     traj=fopen(trajfile,"w");
 
@@ -133,7 +140,7 @@ int main(int argc, char **argv)
     /**************************************************/
 
     /* clean up: close files, free memory */
-    printf("Simulation Done.\n");
+    printf("Simulation Done.\n\n");
     fclose(erg);
     fclose(traj);
 
