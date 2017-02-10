@@ -91,4 +91,19 @@ Each sample counts as 0.01 seconds.
   0.00      1.85     0.00      101     0.00     0.00  output
   0.00      1.85     0.00       12     0.00     0.00  get_a_line
 ```
-Here the performance is improved by 30% of the original code. 
+Here the performance is improved by 30% of the original code. But still the calls the program making to `pbc` is higher we can reduce it by hard coding it into the loop instead of loop calling the function many times.
+the performance we get after that modification is faster.
+
+```
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total
+ time   seconds   seconds    calls   s/call   s/call  name
+ 95.20      1.34     1.34    10001     0.00     0.00  force
+  4.97      1.41     0.07    10000     0.00     0.00  velverlet
+  0.00      1.41     0.00    30006     0.00     0.00  azzero
+  0.00      1.41     0.00    10001     0.00     0.00  ekin
+  0.00      1.41     0.00      101     0.00     0.00  output
+  0.00      1.41     0.00       12     0.00     0.00  get_a_line
+  0.00      1.41     0.00        2     0.00     0.00  seconds
+  0.00      1.41     0.00        1     0.00     1.41  mdsim
+```
