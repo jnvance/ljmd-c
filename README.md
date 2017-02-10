@@ -28,3 +28,25 @@ doc – Project’s documentation, possibly auto-generated.
 .gitignore – Prevents adding binary and temporary files to the git repository.
 
 README.md – General information about the project in Markdown format.
+
+Compilation
+-----------
+In the root directory:
+  ```
+  make
+  make shared
+  make tests
+  ```
+Usage
+----
+  Running the executable directly
+  ```
+  cd examples
+  ../bin/ljmd.x < [inputfile].inp
+  ```
+  Running from the python script
+  ```
+  cd examples
+  ../python/ljmd.py [inputfile].inp
+  ```
+  
