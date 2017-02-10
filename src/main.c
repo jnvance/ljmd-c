@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
+#include <mpi.h>
 
 #include "global.h"
 #include "io.h"
@@ -23,13 +24,13 @@
 /* main */
 int main(int argc, char **argv)
 {
-    int nprint; 
+    int nprint;
     int natoms, nsteps;
     double mass, epsilon, sigma, box, rcut, dt;
-    
+
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
 
-    /* read input file */
+
     if(get_a_line(stdin,line)) return 1;
     natoms=atoi(line);
     if(get_a_line(stdin,line)) return 1;
@@ -52,9 +53,11 @@ int main(int argc, char **argv)
     if(get_a_line(stdin,line)) return 1;
     nprint=atoi(line);
 
-    mdsim( nprint, natoms,  nsteps,  mass,  epsilon, 
-           sigma,  box,  rcut,  dt, restfile, 
+    MPI_Init( &argc, &argv );
+    mdsim( nprint, natoms,  nsteps,  mass,  epsilon,
+           sigma,  box,  rcut,  dt, restfile,
            trajfile, ergfile);
 
+    MPI_Finalize();
     return 0;
 }

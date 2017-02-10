@@ -4,6 +4,7 @@
 #ifndef BLEN
 #define BLEN 200
 #endif /* ifndef BLEN */
+#include <mpi.h>
 
 /* structure to hold the complete information
  * about the MD system */
@@ -14,6 +15,8 @@ struct _mdsys {
     double *rx, *ry, *rz;
     double *vx, *vy, *vz;
     double *fx, *fy, *fz;
+    double *cx, *cy, *cz;
+    int nsize, mpirank;
 };
 typedef struct _mdsys mdsys_t;
 

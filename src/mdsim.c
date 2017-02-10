@@ -1,16 +1,25 @@
+#include <mpi.h>
 #include "global.h"
 #include "io.h"
 #include "misc.h"
 #include "force_energy.h"
 #include "mdsim.h"
 
-int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon, 
-          double sigma, double box, double rcut, double dt, char restfile[BLEN], 
+int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon,
+          double sigma, double box, double rcut, double dt, char restfile[BLEN],
           char trajfile[BLEN], char ergfile[BLEN])
 {
     int i;
     FILE *fp,*traj,*erg;
     mdsys_t sys;
+
+    int np,myrank;
+    MPI_Comm_rank( MPI_COMM_WORLD, &myrank );
+    MPI_Comm_size( MPI_COMM_WORLD, &np );
+
+    sys.mpirank=myrank;
+    sys.nsize=np;
+    printf("rank %d of %d processes\n",sys.mpirank,sys.nsize);
 
     sys.natoms=natoms;
     sys.mass=mass;
@@ -31,6 +40,10 @@ int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon,
     sys.fx=(double *)malloc(sys.natoms*sizeof(double));
     sys.fy=(double *)malloc(sys.natoms*sizeof(double));
     sys.fz=(double *)malloc(sys.natoms*sizeof(double));
+
+    sys.cx=(double *)malloc(sys.natoms*sizeof(double));
+    sys.cy=(double *)malloc(sys.natoms*sizeof(double));
+    sys.cz=(double *)malloc(sys.natoms*sizeof(double));
 
     /* read restart */
     fp=fopen(restfile,"r");

@@ -6,12 +6,12 @@ INCDIR    = include
 SERIALDIR = serial
 TESTDIR   = tests
 
-CC        = gcc -pg
-LINKER    = gcc -pg -o
+CC        = mpicc
+LINKER    = mpicc -o
 
 
-CFLAGS    = -Wall -I. -I$(INCDIR) -I$(SRCDIR) -g -O3 -ffast-math #-fomit-frame-pointer
-SCFLAGS   = -Wall -I. -g -O3 -ffast-math #-fomit-frame-pointer
+CFLAGS    = -Wall -I. -I$(INCDIR) -I$(SRCDIR) -pg -g -O3 -ffast-math #-fomit-frame-pointer
+SCFLAGS   = -Wall -I. -pg -g -O3 -ffast-math #-fomit-frame-pointer
 LFLAGS    = -lm
 
 
