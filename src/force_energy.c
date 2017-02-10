@@ -30,14 +30,9 @@ void force(mdsys_t *sys)
     azzero(sys->fy,sys->natoms);
     azzero(sys->fz,sys->natoms);
 
-#ifndef __MORSE__
     double c12 = 4.0*sys->epsilon*pow(sys->sigma,12.0);
     double c6 = 4.0*sys->epsilon*pow(sys->sigma,6.0);
     double rcsq = sys->rcut*sys->rcut;
-#endif
-#ifdef __MORSE__
-                //some shit
-#endif
     for(i=0; i < (sys->natoms)-1; ++i) {
         for(j=i+1; j < (sys->natoms); ++j) {
 
@@ -49,16 +44,18 @@ void force(mdsys_t *sys)
 
             /* compute force and energy if within cutoff */
             if (rsq < rcsq) {
-#ifndef __MORSE__
+                /* ffac = -4.0*sys->epsilon*(-12.0*pow(sys->sigma/r,12.0)/r */
+                                         /* +6*pow(sys->sigma/r,6.0)/r); */
                 double r6,rinv;
                 rinv = 1.0/rsq;
                 r6 = rinv*rinv*rinv;
                 ffac = (12.0*c12*r6-6.0*c6)*r6*rinv;
                 sys->epot += r6*(c12*r6-c6);
-#endif
-#ifdef __MORSE__
-                //some shit
-#endif
+
+
+                /* sys->epot += 0.5*4.0*sys->epsilon*(pow(sys->sigma/r,12.0) */
+                                               /* -pow(sys->sigma/r,6.0)); */
+
                 sys->fx[i] += rx*ffac;
                 sys->fx[j] -= rx*ffac;
                 sys->fy[i] += ry*ffac;
