@@ -1,5 +1,6 @@
 
 #include "misc.h"
+#include <sys/time.h>
 /* helper function: zero out an array */
 void azzero(double *d, const int n)
 {

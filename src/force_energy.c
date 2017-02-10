@@ -21,7 +21,7 @@ void ekin(mdsys_t *sys)
 void force(mdsys_t *sys)
 {
     double rsq,ffac;
-    double rx,ry,rz,rij;
+    double rx,ry,rz;
     int i,j;
 
     /* zero energy and forces */

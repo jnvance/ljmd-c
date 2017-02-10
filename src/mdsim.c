@@ -33,8 +33,8 @@ int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon,
     sys.fz=(double *)malloc(sys.natoms*sizeof(double));
 
 
-    #pragma omp parallel
-    if (omp_get_thread_num() == 1) printf("Threads: %d\n",omp_get_num_threads());
+    // #pragma omp parallel
+    // if (omp_get_thread_num() == 1) printf("Threads: %d\n",omp_get_num_threads());
 
     /* read restart */
     fp=fopen(restfile,"r");
