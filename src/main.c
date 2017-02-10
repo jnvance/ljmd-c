@@ -10,7 +10,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
-// #include <omp.h>
+#include <omp.h>
 
 #include "global.h"
 #include "io.h"
@@ -29,6 +29,10 @@ int main(int argc, char **argv)
     double mass, epsilon, sigma, box, rcut, dt;
     
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
+
+    /*omp_set_dynamic(0);*/
+    #pragma omp parallel
+    printf("%d",omp_get_num_threads());
 
     /* read input file */
     if(get_a_line(stdin,line)) return 1;

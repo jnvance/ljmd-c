@@ -37,6 +37,7 @@ void force(mdsys_t *sys)
     double rcsq = sys->rcut*sys->rcut;
     double boxby2 = 0.5*sys->box;
     
+    /*#pragma omp parallel for*/
     for(i=0; i < (sys->natoms)-1; ++i) {
         for(j=i+1; j < (sys->natoms); ++j) {
 
@@ -81,7 +82,7 @@ void velverlet(mdsys_t *sys)
     const double invmass = 1.0/sys->mass;
 
     /* first part: propagate velocities by half and positions by full step */
-    // #pragma omp parallel for
+    #pragma omp parallel for
     for (i=0; i<sys->natoms; ++i) {
         // sys->vx[i] += 0.5*sys->dt / mvsq2e * sys->fx[i] / sys->mass;
         // sys->vy[i] += 0.5*sys->dt / mvsq2e * sys->fy[i] / sys->mass;
@@ -99,6 +100,8 @@ void velverlet(mdsys_t *sys)
     force(sys);
 
     /* second part: propagate velocities by another half step */
+    
+    #pragma omp parallel for
     for (i=0; i<sys->natoms; ++i) {
         sys->vx[i] += 0.5*sys->dt * invmvsq2e * sys->fx[i] * invmass;
         sys->vy[i] += 0.5*sys->dt * invmvsq2e * sys->fy[i] * invmass;
