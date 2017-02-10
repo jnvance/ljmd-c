@@ -19,36 +19,22 @@
 /* generic file- or pathname buffer length */
 /* #define BLEN 200 */
 
-/* main */
-int main(int argc, char **argv)
+int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon, 
+          double sigma, double box, double rcut, double dt, char restfile[BLEN], 
+          char trajfile[BLEN], char ergfile[BLEN], char line[BLEN])
 {
-    int nprint, i;
-    char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
+    int i;
     FILE *fp,*traj,*erg;
     mdsys_t sys;
 
-    /* read input file */
-    if(get_a_line(stdin,line)) return 1;
-    sys.natoms=atoi(line);
-    if(get_a_line(stdin,line)) return 1;
-    sys.mass=atof(line);
-    if(get_a_line(stdin,line)) return 1;
-    sys.epsilon=atof(line);
-    if(get_a_line(stdin,line)) return 1;
-    sys.sigma=atof(line);
-    if(get_a_line(stdin,line)) return 1;
-    sys.rcut=atof(line);
-    if(get_a_line(stdin,line)) return 1;
-    sys.box=atof(line);
-    if(get_a_line(stdin,restfile)) return 1;
-    if(get_a_line(stdin,trajfile)) return 1;
-    if(get_a_line(stdin,ergfile)) return 1;
-    if(get_a_line(stdin,line)) return 1;
-    sys.nsteps=atoi(line);
-    if(get_a_line(stdin,line)) return 1;
-    sys.dt=atof(line);
-    if(get_a_line(stdin,line)) return 1;
-    nprint=atoi(line);
+    sys.natoms=natoms;
+    sys.mass=mass;
+    sys.epsilon=epsilon;
+    sys.sigma=sigma;
+    sys.rcut=rcut;
+    sys.box=box;
+    sys.nsteps=nsteps;
+    sys.dt=dt;
 
     /* allocate memory */
     sys.rx=(double *)malloc(sys.natoms*sizeof(double));
@@ -119,6 +105,51 @@ int main(int argc, char **argv)
     free(sys.fx);
     free(sys.fy);
     free(sys.fz);
+
+    return 0;
+}
+
+
+
+
+
+
+/* main */
+int main(int argc, char **argv)
+{
+
+    int nprint; 
+    int natoms, nsteps;
+    double mass, epsilon, sigma, box, rcut, dt;
+    
+    char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
+
+    /* read input file */
+    if(get_a_line(stdin,line)) return 1;
+    natoms=atoi(line);
+    if(get_a_line(stdin,line)) return 1;
+    mass=atof(line);
+    if(get_a_line(stdin,line)) return 1;
+    epsilon=atof(line);
+    if(get_a_line(stdin,line)) return 1;
+    sigma=atof(line);
+    if(get_a_line(stdin,line)) return 1;
+    rcut=atof(line);
+    if(get_a_line(stdin,line)) return 1;
+    box=atof(line);
+    if(get_a_line(stdin,restfile)) return 1;
+    if(get_a_line(stdin,trajfile)) return 1;
+    if(get_a_line(stdin,ergfile)) return 1;
+    if(get_a_line(stdin,line)) return 1;
+    nsteps=atoi(line);
+    if(get_a_line(stdin,line)) return 1;
+    dt=atof(line);
+    if(get_a_line(stdin,line)) return 1;
+    nprint=atoi(line);
+
+    mdsim( nprint, natoms,  nsteps,  mass,  epsilon, 
+           sigma,  box,  rcut,  dt, restfile, 
+           trajfile, ergfile, line);
 
     return 0;
 }
