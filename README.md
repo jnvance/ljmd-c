@@ -13,7 +13,7 @@ to compile everything and: make clean
 to remove all compiled objects
 Project tree
 -----------
-bin – Output executables (`targets`). The suffix `_d` indicates debug version.
+bin – Output executables (`targets`). The suffix indicates debug version.
 
 obj – Binary objects created during compilation.
 
@@ -21,9 +21,14 @@ src – Source files of the project with subdirectories if needed.
 
 include – Files used by the main executable.
 
-test – Source files of tests.
+tests – Source files of tests.
 
-doc – Project’s documentation, possibly auto-generated.
+serial - serial version of the code.
+
+python - python wrapper for the top level functions
+
+examples - folder for input example files
+
 
 .gitignore – Prevents adding binary and temporary files to the git repository.
 
@@ -32,20 +37,24 @@ README.md – General information about the project in Markdown format.
 Compilation
 -----------
 In the root directory:
-  ```
-  make
-  make shared
-  make tests
+  ```bash
+  make                      #to make the default MD code with Lennard-Jones potential
+  make morse                #to make the MD with Morse potential
+  make shared               #to create the shared libraries
+  make tests                #to create the test executables
+  make serial               #to make the original serial-version(not optimized)
   ```
 Usage
 ----
   Running the executable directly
-  ```
+  ```bash
   cd examples
   ../bin/ljmd.x < [inputfile].inp
+  ../bin/ljmd-morse.x < [inputfile].inp
+  ../bin/ljmd-serial.x < [inputfile].inp
   ```
   Running from the python script
-  ```
+  ```bash
   cd examples
   ../python/ljmd.py [inputfile].inp
   ```
@@ -91,4 +100,19 @@ Each sample counts as 0.01 seconds.
   0.00      1.85     0.00      101     0.00     0.00  output
   0.00      1.85     0.00       12     0.00     0.00  get_a_line
 ```
-Here the performance is improved by 30% of the original code. 
+Here the performance is improved by 30% of the original code. But still the calls the program making to `pbc` is higher we can reduce it by hard coding it into the loop instead of loop calling the function many times.
+the performance we get after that modification is faster.
+
+```
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total
+ time   seconds   seconds    calls   s/call   s/call  name
+ 95.20      1.34     1.34    10001     0.00     0.00  force
+  4.97      1.41     0.07    10000     0.00     0.00  velverlet
+  0.00      1.41     0.00    30006     0.00     0.00  azzero
+  0.00      1.41     0.00    10001     0.00     0.00  ekin
+  0.00      1.41     0.00      101     0.00     0.00  output
+  0.00      1.41     0.00       12     0.00     0.00  get_a_line
+  0.00      1.41     0.00        2     0.00     0.00  seconds
+  0.00      1.41     0.00        1     0.00     1.41  mdsim
+```

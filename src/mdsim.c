@@ -32,6 +32,10 @@ int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon,
     sys.fy=(double *)malloc(sys.natoms*sizeof(double));
     sys.fz=(double *)malloc(sys.natoms*sizeof(double));
 
+
+    // #pragma omp parallel
+    // if (omp_get_thread_num() == 1) printf("Threads: %d\n",omp_get_num_threads());
+
     /* read restart */
     fp=fopen(restfile,"r");
     if(fp) {
@@ -62,6 +66,7 @@ int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon,
     printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
     output(&sys, erg, traj);
 
+    double t = seconds();
     /**************************************************/
     /* main MD loop */
     for(sys.nfi=1; sys.nfi <= sys.nsteps; ++sys.nfi) {
@@ -75,9 +80,12 @@ int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon,
         ekin(&sys);
     }
     /**************************************************/
+    t = seconds() - t;
+
 
     /* clean up: close files, free memory */
     printf("Simulation Done.\n");
+    printf("%f\n",t);
     fclose(erg);
     fclose(traj);
 
