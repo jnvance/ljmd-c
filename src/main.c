@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
+#include <mpi.h>
 
 #include "global.h"
 #include "io.h"
