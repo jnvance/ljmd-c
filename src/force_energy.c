@@ -4,6 +4,7 @@
 /* a few physical constants */
 const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
 const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
+const double invmvsq2e=1/2390.05736153349; /* m*v^2 in kcal/mol */
 
 /* compute kinetic energy */
 void ekin(mdsys_t *sys)
@@ -34,9 +35,9 @@ void force(mdsys_t *sys)
     double c6 = 4.0*sys->epsilon*pow(sys->sigma,6.0);
     double rcsq = sys->rcut*sys->rcut;
     double boxby2 = 0.5*sys->box;
+    
     for(i=0; i < (sys->natoms)-1; ++i) {
         for(j=i+1; j < (sys->natoms); ++j) {
-
 
             rx = sys->rx[i] - sys->rx[j];
             while (rx>  boxby2) rx-= sys->box;
@@ -76,13 +77,18 @@ void force(mdsys_t *sys)
 void velverlet(mdsys_t *sys)
 {
     int i;
+    const double invmass = 1.0/sys->mass;
 
     /* first part: propagate velocities by half and positions by full step */
     // #pragma omp parallel for
     for (i=0; i<sys->natoms; ++i) {
-        sys->vx[i] += 0.5*sys->dt / mvsq2e * sys->fx[i] / sys->mass;
-        sys->vy[i] += 0.5*sys->dt / mvsq2e * sys->fy[i] / sys->mass;
-        sys->vz[i] += 0.5*sys->dt / mvsq2e * sys->fz[i] / sys->mass;
+        // sys->vx[i] += 0.5*sys->dt / mvsq2e * sys->fx[i] / sys->mass;
+        // sys->vy[i] += 0.5*sys->dt / mvsq2e * sys->fy[i] / sys->mass;
+        // sys->vz[i] += 0.5*sys->dt / mvsq2e * sys->fz[i] / sys->mass;
+
+        sys->vx[i] += 0.5*sys->dt * invmvsq2e * sys->fx[i] * invmass;
+        sys->vy[i] += 0.5*sys->dt * invmvsq2e * sys->fy[i] * invmass;
+        sys->vz[i] += 0.5*sys->dt * invmvsq2e * sys->fz[i] * invmass;
         sys->rx[i] += sys->dt*sys->vx[i];
         sys->ry[i] += sys->dt*sys->vy[i];
         sys->rz[i] += sys->dt*sys->vz[i];
@@ -93,8 +99,8 @@ void velverlet(mdsys_t *sys)
 
     /* second part: propagate velocities by another half step */
     for (i=0; i<sys->natoms; ++i) {
-        sys->vx[i] += 0.5*sys->dt / mvsq2e * sys->fx[i] / sys->mass;
-        sys->vy[i] += 0.5*sys->dt / mvsq2e * sys->fy[i] / sys->mass;
-        sys->vz[i] += 0.5*sys->dt / mvsq2e * sys->fz[i] / sys->mass;
+        sys->vx[i] += 0.5*sys->dt * invmvsq2e * sys->fx[i] * invmass;
+        sys->vy[i] += 0.5*sys->dt * invmvsq2e * sys->fy[i] * invmass;
+        sys->vz[i] += 0.5*sys->dt * invmvsq2e * sys->fz[i] * invmass;
     }
 }
