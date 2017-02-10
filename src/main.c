@@ -21,7 +21,7 @@
 
 int mdsim(int nprint,int natoms, int nsteps, double mass, double epsilon, 
           double sigma, double box, double rcut, double dt, char restfile[BLEN], 
-          char trajfile[BLEN], char ergfile[BLEN], char line[BLEN])
+          char trajfile[BLEN], char ergfile[BLEN])
 {
     int i;
     FILE *fp,*traj,*erg;
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
     mdsim( nprint, natoms,  nsteps,  mass,  epsilon, 
            sigma,  box,  rcut,  dt, restfile, 
-           trajfile, ergfile, line);
+           trajfile, ergfile);
 
     return 0;
 }
