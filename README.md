@@ -13,7 +13,7 @@ to compile everything and: make clean
 to remove all compiled objects
 Project tree
 -----------
-bin – Output executables (`targets`). The suffix `_d` indicates debug version.
+bin – Output executables (`targets`). The suffix indicates debug version.
 
 obj – Binary objects created during compilation.
 
@@ -21,9 +21,14 @@ src – Source files of the project with subdirectories if needed.
 
 include – Files used by the main executable.
 
-test – Source files of tests.
+tests – Source files of tests.
 
-doc – Project’s documentation, possibly auto-generated.
+serial - serial version of the code.
+
+python - python wrapper for the top level functions
+
+examples - folder for input example files
+
 
 .gitignore – Prevents adding binary and temporary files to the git repository.
 
@@ -32,20 +37,24 @@ README.md – General information about the project in Markdown format.
 Compilation
 -----------
 In the root directory:
-  ```
-  make
-  make shared
-  make tests
+  ```bash
+  make                      #to make the default MD code with Lennard-Jones potential
+  make morse                #to make the MD with Morse potential
+  make shared               #to create the shared libraries
+  make tests                #to create the test executables
+  make serial               #to make the original serial-version(not optimized)
   ```
 Usage
 ----
   Running the executable directly
-  ```
+  ```bash
   cd examples
   ../bin/ljmd.x < [inputfile].inp
+  ../bin/ljmd-morse.x < [inputfile].inp
+  ../bin/ljmd-serial.x < [inputfile].inp
   ```
   Running from the python script
-  ```
+  ```bash
   cd examples
   ../python/ljmd.py [inputfile].inp
   ```
