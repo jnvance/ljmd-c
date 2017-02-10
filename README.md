@@ -112,3 +112,4 @@ Each sample counts as 0.01 seconds.
   0.00      1.41     0.00        2     0.00     0.00  seconds
   0.00      1.41     0.00        1     0.00     1.41  mdsim
 ```
+For improvement: Attempts at OpenMP and MPI implementations were made and are placed in separate branches. Our OpenMP implementation works but does not give adequate improvements. On the other hand, the MPI implementation has a bug that causes a segmentation fault. 
