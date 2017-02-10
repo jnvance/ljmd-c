@@ -66,7 +66,7 @@ shared: $(OBJDIR)/ljmd.so
 
 $(OBJDIR)/ljmd.so:  
 	@mkdir -p $(dir $@)
-	@gcc -shared -o $@ $(OBJXMAIN)
+	@gcc -shared -o $@ $(OBJ)
 	@echo "Compiled shared objects!"
 
 # rules for cleaning up
