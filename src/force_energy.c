@@ -87,8 +87,10 @@ void force(mdsys_t *sys)
     azzero(sys->fy,sys->natoms);
     azzero(sys->fz,sys->natoms);
 
-    double c12 = 4.0*sys->epsilon*pow(sys->sigma,12.0);
-    double c6 = 4.0*sys->epsilon*pow(sys->sigma,6.0);
+    double r, y;
+    double D0=sys->epsilon;
+    double r0=1.122462*sys->sigma;
+    double alpha=0.15;
     double rcsq = sys->rcut*sys->rcut;
     double boxby2 = 0.5*sys->box;
     for(i=0; i < (sys->natoms)-1; ++i) {
@@ -112,11 +114,10 @@ void force(mdsys_t *sys)
             /* compute force and energy if within cutoff */
             if (rsq < rcsq) {
 
-                double r6,rinv;
-                rinv = 1.0/rsq;
-                r6 = rinv*rinv*rinv;
-                ffac = (12.0*c12*r6-6.0*c6)*r6*rinv;
-                sys->epot += r6*(c12*r6-c6);
+                r = sqrt(rsq);
+                y = exp(-1.0*alpha*(r-r0));
+                ffac = (2.0/r)*D0*alpha*(1-y)*y;
+                sys->epot += D0*y*(y-2);
 
                 sys->fx[i] += rx*ffac;
                 sys->fx[j] -= rx*ffac;
