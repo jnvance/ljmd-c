@@ -18,6 +18,7 @@ LFLAGS    = -lm
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCDIR)/*.h)
 OBJ      := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+MOBJ      := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.mo)
 LIB      := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.so)
 MAINOBJ  := $(OBJDIR)/main.o
 OBJXMAIN := $(filter-out $(MAINOBJ),$(OBJ))
@@ -32,6 +33,19 @@ $(BINDIR)/$(TARGET): $(OBJ)
 $(OBJ): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled "$<" successfully!"
+
+morse: $(BINDIR)/morsemd.x
+
+$(BINDIR)/morsemd.x: $(MOBJ)
+	@mkdir -p $(dir $@)
+	@$(LINKER) $@ $(LFLAGS) $(MOBJ) -Wl,-rpath,$(OBJDIR)/.
+	@echo "Linking complete!"
+
+
+$(MOBJ): $(OBJDIR)/%.mo : $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@ -D__MORSE__
 	@echo "Compiled "$<" successfully!"
 
 # rules for makeing serial version of ljmd.
