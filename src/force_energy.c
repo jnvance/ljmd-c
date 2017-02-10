@@ -3,6 +3,7 @@
 
 /* a few physical constants */
 const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
+const double invkboltz=1/0.0019872067;
 const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
 const double invmvsq2e=1/2390.05736153349; /* m*v^2 in kcal/mol */
 
@@ -15,7 +16,7 @@ void ekin(mdsys_t *sys)
     for (i=0; i<sys->natoms; ++i) {
         sys->ekin += 0.5*mvsq2e*sys->mass*(sys->vx[i]*sys->vx[i] + sys->vy[i]*sys->vy[i] + sys->vz[i]*sys->vz[i]);
     }
-    sys->temp = 2.0*sys->ekin/(3.0*sys->natoms-3.0)/kboltz;
+    sys->temp = 2.0*sys->ekin/(3.0*sys->natoms-3.0)*invkboltz;
 }
 
 /* compute forces */
