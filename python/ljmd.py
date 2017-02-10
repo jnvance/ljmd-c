@@ -1,34 +1,38 @@
 #!/usr/bin/env python
 
 from ctypes import *
+import os
 
-class _mdsys(Structure):
-	_fields_ = [("natoms",c_int),("nfi",c_int),("nsteps",c_int),
-				("dt",c_double),("mass",c_double),("epsilon",c_double),
-				("sigma",c_double),("box",c_double),("rcut",c_double),
-				("ekin",c_double),("epot",c_double),("temp",c_double),
-				("rx",POINTER(c_double)),("ry",POINTER(c_double)),("rz",POINTER(c_double)),
-				("vx",POINTER(c_double)),("vy",POINTER(c_double)),("vz",POINTER(c_double)),
-				("fx",POINTER(c_double)),("fy",POINTER(c_double)),("fz",POINTER(c_double))]
+mdso = cdll.LoadLibrary("../obj/ljmd.so")
 
-class _syss(Structure):
-	_fields_ = [("natoms",c_int),("nfi",c_int),("nsteps",c_int)]
+def run_mdsim(inputfile):
 
-class _posns(Structure):
-	_fields_ = [("rx",c_double * 5),("ry",c_double * 5),("rz",c_double * 5)]
+	# parse inputfile
+	f = open(inputfile, 'r')
+	natoms,mass,epsilon,sigma,rcut,box,restfile,\
+	trajfile,ergfile,nsteps,dt,nprint = [line.split('#')[0] for line in f.readlines()]
+
+	# convert input to ctype
+	c_nprint   = c_int(int(nprint))
+	c_natoms   = c_int(int(natoms))
+	c_nsteps   = c_int(int(nsteps))
+	c_mass     = c_double(float("".join(mass.split())))
+	c_epsilon  = c_double(float("".join(epsilon.split())))
+	c_sigma    = c_double(float("".join(sigma.split())))
+	c_box      = c_double(float("".join(box.split())))
+	c_rcut     = c_double(float("".join(rcut.split())))
+	c_dt       = c_double(float("".join(dt.split())))
+	c_restfile = c_char_p("".join(restfile.split()).encode())
+	c_trajfile = c_char_p("".join(trajfile.split()).encode())
+	c_ergfile  = c_char_p("".join(ergfile.split()).encode())
+
+	# run simulation
+	mdso.mdsim(c_nprint,c_natoms,c_nsteps,c_mass,c_epsilon,c_sigma,
+			   c_box,c_rcut,c_dt,c_restfile.value,c_trajfile.value,c_ergfile.value)
+
 
 if __name__ == '__main__':
 	
-	# mdso = cdll.LoadLibrary("../obj/ljmd.so")
-	# sys = _mdsys(3,0,3,1,1,1,2,10,5,0,0,0)
-
-	# sys = _syss()
-
-	# print(sys.sigma)
-	# mdso.force(sys)
-
-	# print(_mdsys.natoms)
 	
-	pos = _posns()
-
-	print(pos.rx)
+	inputfile = "argon_108.inp"
+	run_mdsim(inputfile)
